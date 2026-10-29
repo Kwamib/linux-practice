@@ -1,0 +1,3 @@
+Check why the API returned errors around 2pm.
+Find out who is hammering the login page.
+Rotate the logs before the disk fills.
