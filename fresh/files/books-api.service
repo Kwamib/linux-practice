@@ -1,0 +1,12 @@
+[Unit]
+Description=Bookshop API (practice)
+After=network.target
+
+[Service]
+User=bookshop
+ExecStart=/usr/local/bin/books-api
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+# A second bookshop server, built from nothing by setup.sh.
+# The first one, in the folder above, stays as it is.
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-24.04"
+  config.vm.hostname = "bookshop2"
+  config.vm.synced_folder ".", "/setup"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # Runs as root on the first `vagrant up`, and again on `vagrant provision`.
+  config.vm.provision "shell", path: "setup.sh"
+
+  config.vm.provider "vmware_desktop" do |v|
+    v.memory = 2048
+    v.cpus = 2
+    v.vmx["ethernet0.pcislotnumber"] = "160"
+  end
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 2
+  end
+end

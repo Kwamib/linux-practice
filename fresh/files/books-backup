@@ -1,0 +1,17 @@
+#!/bin/bash
+# Back up the books database to the data disk. Keeps 7 days.
+set -euo pipefail
+umask 077
+
+dest=/srv/books-data/backups
+file="$dest/books-$(date +%Y%m%d-%H%M%S).sql.gz"
+tmp="$file.partial"
+
+[ "$(id -u)" -eq 0 ] || { echo "books-backup: run me with sudo" >&2; exit 1; }
+trap 'rm -f "$tmp"' EXIT
+
+install -d -m 700 "$dest"
+runuser -u postgres -- pg_dump books | gzip > "$tmp"
+mv "$tmp" "$file"
+find "$dest" -name 'books-*.sql.gz' -mtime +7 -delete
+echo "$(date '+%F %T') backup written: $file ($(du -h "$file" | cut -f1))"
