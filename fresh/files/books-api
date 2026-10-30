@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+import http.server
+import json
+import socket
+
+settings = {}
+for path in ["/etc/books-api/app.conf", "/etc/books-api/override.conf"]:
+    for line in open(path):
+        if "=" in line and not line.startswith("#"):
+            key, value = line.split("=", 1)
+            settings[key.strip()] = value.strip()
+
+port = int(settings["port"])
+
+
+class Handler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        body = json.dumps({"books": ["Dune", "Beloved", "Kindred"], "served_by": socket.gethostname()}) + "\n"
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body.encode())
+
+
+print(f"INFO  books-api listening on port {port}", flush=True)
+http.server.HTTPServer(("127.0.0.1", port), Handler).serve_forever()

@@ -1,0 +1,6 @@
+[Unit]
+Description=Back up the books database
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/books-backup

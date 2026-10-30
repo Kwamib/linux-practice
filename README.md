@@ -15,3 +15,17 @@ here. This folder appears inside it at `/practice`:
 
     vagrant up
     vagrant ssh
+
+Lesson 15 builds a second server, from nothing, with one script. In `fresh/`:
+
+    cd fresh
+    vagrant up                  # builds it: runs setup.sh
+    vagrant ssh -c 'sudo /setup/audit.sh'
+    vagrant provision           # runs setup.sh again: changes nothing
+
+- `setup.sh` does everything Lessons 5 to 13 did by hand, and is safe to run again.
+- `audit.sh` checks the server is set up and locked down, and changes nothing.
+- `files/` holds the bookshop's own files, copied from the first server.
+  `sam.pub` is the public key Sam logs in with. Put your own there before
+  `vagrant up`: `cp ~/.ssh/bookshop_ed25519.pub fresh/files/sam.pub` (Lesson 11).
+  A public key is safe to share; the private key never leaves your computer.
